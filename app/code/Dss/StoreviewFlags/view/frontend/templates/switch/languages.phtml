@@ -20,7 +20,6 @@ $stores = $block->getStores();
 $flags = $block->getStoreViewFlag();
 $id = $block->getIdModifier() ? '-' . $block->getIdModifier() : '';
 $current_flag = $flags[$block->getCurrentStoreId()];
-
 ?>
 <?php if (count($block->getStores()) > 1): ?>
     <div class="switcher language switcher-language" data-ui-id="language-switcher"
