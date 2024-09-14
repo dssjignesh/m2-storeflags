@@ -12,14 +12,15 @@
  * @author    Extension Team
  * @copyright Copyright (c) 2024 Digit Software Solutions. ( https://digitsoftsol.com )
  */
-
+ 
 /** @var \Magento\Store\Block\Switcher $block */
 ?>
 <?php
 $stores = $block->getStores();
 $flags = $block->getStoreViewFlag();
 $id = $block->getIdModifier() ? '-' . $block->getIdModifier() : '';
-$current_flag = $flags[$block->getCurrentStoreId()];
+$current_store_id = $block->getCurrentStoreId();
+$current_flag = isset($flags[$current_store_id]) ? $flags[$current_store_id] : null;
 ?>
 <?php if (count($block->getStores()) > 1): ?>
     <div class="switcher language switcher-language" data-ui-id="language-switcher"
@@ -32,52 +33,42 @@ $current_flag = $flags[$block->getCurrentStoreId()];
                  data-toggle="dropdown"
                  data-trigger-keypress-button="true">
                 <strong class="view-<?= $escaper->escapeHtml($block->getCurrentStoreCode()) ?>">
-                    <?php
-                    if (isset($flags[$block->getCurrentStoreId()]) && !empty($flags[$block->getCurrentStoreId()])): ?>
+                    <?php if ($current_flag): ?>
                         <span class="flag">
                             <img class="flag-image"
                                  style="height: <?= /* @noEscape */ $current_flag['height'] ?>px;
                                  width: <?= /* @noEscape */ $current_flag['width']; ?>px;vertical-align: middle;"
-                                 src='<?= /* @noEscape */ $current_flag['image'] ?>'
+                                 src="<?= /* @noEscape */ $current_flag['image'] ?>"
                                  title="<?= $escaper->escapeHtml($block->getStoreName()) ?>"
-                                 alt=" <?= $escaper->escapeHtml($block->getStoreName()) ?>"/>
+                                 alt="<?= $escaper->escapeHtml($block->getStoreName()) ?>"/>
                         </span>
                     <?php endif; ?>
-                    <span><?= (isset($flags[$block->getCurrentStoreId()])
-                            && !empty($flags[$block->getCurrentStoreId()])
-                            && ($flags[$block->getCurrentStoreId()]['show_label']))
+                    <span><?= ($current_flag && !$current_flag['show_label'])
                             ? '' : $escaper->escapeHtml($block->getStoreName()) ?></span>
                 </strong>
             </div>
             <ul class="dropdown switcher-dropdown"
-                data-target="dropdown" style="<?= (isset($flags[$block->getCurrentStoreId()])
-                && !empty($flags[$block->getCurrentStoreId()])
-                && ($flags[$block->getCurrentStoreId()]['show_label'])) ? 'min-width:auto' : ''; ?>">
-                <?php foreach ($block->getStores() as $_lang): ?>
-                    <?php if ($_lang->getId()!=$block->getCurrentStoreId()): ?>
+                data-target="dropdown" style="<?= ($current_flag && $current_flag['show_label'])
+                ? 'min-width:auto' : ''; ?>">
+                <?php foreach ($stores as $_lang): ?>
+                    <?php if ($_lang->getId() != $block->getCurrentStoreId()): ?>
+                        <?php $flag = isset($flags[$_lang->getId()]) ? $flags[$_lang->getId()] : null; ?>
                         <li class="view-<?= $escaper->escapeHtml($_lang->getCode()) ?> switcher-option<?=
-                            /* @noEscape */ ($_lang->getFlag() ? ' has-flag' : '') ?>">
+                            /* @noEscape */ ($flag ? ' has-flag' : '') ?>">
                             <a href="#" data-post='<?= /* @noEscape */ $block->getTargetStorePostData($_lang) ?>'>
-                                <?php if ($_lang->getFlag()): ?>
-                                    <span class="flag-icon flag-icon-<?= /* @noEscape */ $_lang->getFlag() ?>"></span>
-                                <?php endif; ?>
-                                <?php
-                                if (isset($flags[$_lang->getId()]) && !empty($flags[$_lang->getId()])): ?>
-                                    <?php $flag = $flags[$_lang->getId()]; ?>
+                                <?php if ($flag): ?>
                                     <span class="flag">
-                                        <img class="flag-image" style="height: <?= /* @noEscape */
-                                            $flags[$block->getCurrentStoreId()]['height'] ?>px; width: <?=
-                                            /* @noEscape */ $flags[$block->getCurrentStoreId()]['width']; ?>px;
-                                            vertical-align: middle;" src='<?= /* @noEscape */ $flag['image'] ?>'
-                                            title="<?= $escaper->escapeHtml($_lang->getName()) ?>" alt="<?=
-                                            /* @noEscape */ $escaper->escapeHtml($_lang->getName()) ?>"/>
+                                        <img class="flag-image"
+                                             style="height: <?= /* @noEscape */ $flag['height'] ?>px;
+                                             width: <?= /* @noEscape */ $flag['width']; ?>px;
+                                             vertical-align: middle;"
+                                             src="<?= /* @noEscape */ $flag['image'] ?>"
+                                             title="<?= $escaper->escapeHtml($_lang->getName()) ?>"
+                                             alt="<?= $escaper->escapeHtml($_lang->getName()) ?>"/>
                                     </span>
                                 <?php endif; ?>
-                                <?= (isset($flags[$block->getCurrentStoreId()])
-                                    && !empty($flags[$block->getCurrentStoreId()])
-                                    && ($flags[$block->getCurrentStoreId()]['show_label']))
-                                    ? '' : $escaper->escapeHtml($_lang->getName());
-                                ?>
+                                <?= ($flag && !$flag['show_label'])
+                                    ? '' : $escaper->escapeHtml($_lang->getName()) ?>
                             </a>
                         </li>
                     <?php endif; ?>
