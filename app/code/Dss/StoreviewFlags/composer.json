@@ -1,6 +1,6 @@
 {
   "name": "dss/m2-storeflags",
-  "description": "Dss Store Views Flags Module",
+  "description": "Dss store view flags module",
   "type": "magento2-module",
   "version": "0.0.1",
   "authors": [

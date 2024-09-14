@@ -19,8 +19,12 @@
 $stores = $block->getStores();
 $flags = $block->getStoreViewFlag();
 $id = $block->getIdModifier() ? '-' . $block->getIdModifier() : '';
+<<<<<<< HEAD
 $current_store_id = $block->getCurrentStoreId();
 $current_flag = isset($flags[$current_store_id]) ? $flags[$current_store_id] : null;
+=======
+$current_flag = $flags[$block->getCurrentStoreId()];
+>>>>>>> 6b60a0748f51c81d5255fa681f06d813e94e7a17
 ?>
 <?php if (count($block->getStores()) > 1): ?>
     <div class="switcher language switcher-language" data-ui-id="language-switcher"
